@@ -1,3 +1,11 @@
+GIT
+  remote: https://github.com/TheRealNeil/Draftsman.git
+  revision: 98a0fc7a8205fef61b772eca5b00b92026b6df25
+  branch: rails6.0
+  specs:
+    draftsman (0.8.0.dev)
+      activerecord (>= 4.2, < 6.1)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -205,6 +213,7 @@ DEPENDENCIES
   bootsnap (>= 1.4.2)
   byebug
   capybara (>= 2.15)
+  draftsman!
   jbuilder (~> 2.5)
   listen (>= 3.0.5, < 3.2)
   pg (>= 0.18, < 2.0)
