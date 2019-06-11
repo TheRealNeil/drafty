@@ -1,5 +1,6 @@
 class ActivitiesController < ApplicationController
   before_action :set_activity, only: [:show, :edit, :update, :destroy]
+  before_action :reify_activity, only: :edit
 
   # GET /activities
   # GET /activities.json
@@ -27,7 +28,8 @@ class ActivitiesController < ApplicationController
     @activity = Activity.new(activity_params)
 
     respond_to do |format|
-      if @activity.save
+      if @activity.save_draft
+        @activity.draft.publish! if params['commit'] == 'Publish'
         format.html { redirect_to @activity, notice: 'Activity was successfully created.' }
         format.json { render :show, status: :created, location: @activity }
       else
@@ -40,8 +42,10 @@ class ActivitiesController < ApplicationController
   # PATCH/PUT /activities/1
   # PATCH/PUT /activities/1.json
   def update
+    @activity.assign_attributes(activity_params)
     respond_to do |format|
-      if @activity.update(activity_params)
+      if @activity.save_draft
+        @activity.draft.publish! if params['commit'] == 'Publish'
         format.html { redirect_to @activity, notice: 'Activity was successfully updated.' }
         format.json { render :show, status: :ok, location: @activity }
       else
@@ -54,7 +58,8 @@ class ActivitiesController < ApplicationController
   # DELETE /activities/1
   # DELETE /activities/1.json
   def destroy
-    @activity.destroy
+    # @activity.destroy
+    @activity.draft_destruction
     respond_to do |format|
       format.html { redirect_to activities_url, notice: 'Activity was successfully destroyed.' }
       format.json { head :no_content }
@@ -66,7 +71,10 @@ class ActivitiesController < ApplicationController
     def set_activity
       @activity = Activity.find(params[:id])
     end
-
+    # If the widget has a draft, load that version of it.
+    def reify_activity
+      @activity = @activity.draft.reify if @activity.draft?
+    end
     # Never trust parameters from the scary internet, only allow the white list through.
     def activity_params
       params.require(:activity).permit(:name, :description)

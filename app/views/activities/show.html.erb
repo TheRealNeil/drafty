@@ -10,5 +10,11 @@
   <%= @activity.description %>
 </p>
 
+<p>
+  <strong>Status:</strong>
+  <%= 'Published' if @activity.published? && !@activity.draft? %>
+  <%= 'Draft' if @activity.draft?  && !@activity.published? %>
+  <%= 'Published (with Draft)' if @activity.published? && @activity.draft? %>
+</p>
 <%= link_to 'Edit', edit_activity_path(@activity) %> |
 <%= link_to 'Back', activities_path %>
