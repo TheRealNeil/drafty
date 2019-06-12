@@ -5,6 +5,31 @@ class ActivitiesControllerTest < ActionDispatch::IntegrationTest
     @activity = activities(:one)
   end
 
+
+  # Create a draft
+  test "should create a draft for activity" do
+    assert_nil @activity.draft
+    patch activity_url(@activity), params: { activity: { description: 'New Description', name: @activity.name }, commit: "Draft" }
+    assert_redirected_to activity_url(@activity)
+    activity = Activity.last
+    refute_nil activity.draft
+  end
+
+  test "should update activity from draft" do
+    # Creating a draft
+    assert_nil @activity.draft
+    patch activity_url(@activity), params: { activity: { description: 'New Description', name: @activity.name }, commit: "Draft" }
+    assert_redirected_to activity_url(@activity)
+    activity = Activity.last
+    refute_nil activity.draft
+
+    # Updating an activity from a draft
+    patch activity_path(activity), params: { activity: { description: 'New Description', name: @activity.name }, commit: "Publish" }
+    assert_redirected_to activity_url(@activity)
+    activity2 = Activity.last
+    assert_nil activity2.draft
+  end
+
   test "should get index" do
     get activities_url
     assert_response :success

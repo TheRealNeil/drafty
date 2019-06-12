@@ -58,8 +58,8 @@ class ActivitiesController < ApplicationController
   # DELETE /activities/1
   # DELETE /activities/1.json
   def destroy
-    # @activity.destroy
-    @activity.draft_destruction
+    #  Perhaps we can use one of the Callbacks ?
+    @activity.draft? ? @activity.destroy : @activity.draft_destruction
     respond_to do |format|
       format.html { redirect_to activities_url, notice: 'Activity was successfully destroyed.' }
       format.json { head :no_content }

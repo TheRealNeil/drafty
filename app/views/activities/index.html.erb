@@ -17,14 +17,14 @@
       <tr>
         <td><%= activity.name %></td>
         <td><%= activity.description %></td>
-        <td>
+        <td style="color: red;">
           <%= 'Published' if activity.published? && !activity.draft? %>
           <%= 'Draft' if activity.draft?  && !activity.published? %>
           <%= 'Published (with Draft)' if activity.published? && activity.draft? %>
         </td>
         <td><%= link_to 'Show', activity %></td>
         <td><%= link_to 'Edit', edit_activity_path(activity) %></td>
-        <td><%= link_to 'Destroy', activity, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= link_to 'Destroy', activity, method: :delete, data: { confirm: "#{activity.draft? ? 'Are you sure ? All drafts will be deleted too.' : 'Are you sure?'}" } %></td>
       </tr>
     <% end %>
   </tbody>
