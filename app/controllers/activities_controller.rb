@@ -1,4 +1,5 @@
 class ActivitiesController < ApplicationController
+  before_action :set_paper_trail_whodunnit
   before_action :set_activity, only: [:show, :edit, :update, :destroy]
   before_action :reify_activity, only: :edit
 
